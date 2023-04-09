@@ -8,6 +8,7 @@ import { AuthContext } from "./../context/AuthContext";
 
 const AppNav = () => {
   const { isLoading, userToken } = useContext(AuthContext);
+  console.log(userToken)
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -15,14 +16,15 @@ const AppNav = () => {
       </View>
     );
   }
+  // console.log(userToken)
   return (
     <NavigationContainer>
       {/* USE THE BELOW ONE FOR CORRECT IMPLEMENTATION: */}
-      {/* {userToken !== null? <AppStack /> : <AuthStack />} */}
+      {userToken !== null? <AppStack /> : <AuthStack />}
       {/* The below is for testing ONLY! */}
       {/* {userToken !== null? <AuthStack /> : <AppStack />} */}
       {/* <AuthStack /> */}
-      <AppStack />
+      {/* <AppStack /> */}
     </NavigationContainer>
   );
 };

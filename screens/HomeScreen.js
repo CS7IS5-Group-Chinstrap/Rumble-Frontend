@@ -24,7 +24,8 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchSimilarUsers = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/get-similar-users/19");
+        console.log("Fetching Similar Users")
+        const response = await axios.get("http://127.0.0.1:5000/get-similar-users/1");
         setUsers(response.data);
         console.log(response.data);
       } catch (error) {

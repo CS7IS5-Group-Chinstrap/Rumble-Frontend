@@ -14,14 +14,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
 import users from "../assets/data/users";
 import { AuthContext } from "./../context/AuthContext";
+import axios from 'axios';
+import { BASE_URL } from "./../config";
+const user_id = 19
 
 const ProfileScreen = () => {
   const { logout, userInfo } = useContext(AuthContext);
   const [user, setUser] = useState(userInfo);
-  const [name, setName] = useState(userInfo.name);
-  const [bio, setBio] = useState(userInfo.bio);
-  const [gender, setGender] = useState(userInfo.gender);
-  const [lookingFor, setLookingFor] = useState(userInfo.lookingFor);
+  const [name, setName] = useState(userInfo?.name);
+  const [bio, setBio] = useState(userInfo?.bio);
+  const [gender, setGender] = useState(userInfo?.gender);
+  const [lookingFor, setLookingFor] = useState(userInfo?.lookingFor);
 
   const isValid = () => {
     let message = "";
@@ -37,14 +40,35 @@ const ProfileScreen = () => {
     return message;
     // return name && bio && gender && lookingFor;
   };
-  const save = async () => {
+  const saveProfile = async () => {
     const m = isValid();
     if (m != "") {
       console.warn(m);
       return;
     }
-    Alert.alert("User Saved Successfully");
+    const payload = {
+      "name" : name,
+      "essay0" : bio,
+      "sex" : gender,
+      "orientation" :lookingFor,
+    };
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/update-user?userID=${user_id}`,
+        payload
+      );
+  
+      if (response.status === 200) {
+        Alert.alert('User saved successfully');
+      } else {
+        console.warn('Error saving user data');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   return (
     <SafeAreaView style={styles.root}>
       <View style={styles.container}>
@@ -82,7 +106,7 @@ const ProfileScreen = () => {
           <Picker.Item label="Female" value="FEMALE" />
           <Picker.Item label="Other" value="OTHER" />
         </Picker>
-        <Pressable onPress={() => {}} style={styles.button}>
+        <Pressable onPress={saveProfile} style={styles.button}>
           <Text>Save</Text>
         </Pressable>
         <Pressable
