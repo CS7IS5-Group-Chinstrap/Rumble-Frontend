@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
+import axios from "axios";
 
 import Card from "../components/Card";
 import AnimatedStack from "../components/AnimatedStack";
@@ -19,6 +20,20 @@ const HomeScreen = () => {
   const onSwipeRight = user => {
     console.log("Swipe Right: ", user.name);
   };
+
+  useEffect(() => {
+    const fetchSimilarUsers = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:5000/get-similar-users/19");
+        setUsers(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchSimilarUsers();
+  }, []);
 
   return (
     <View style={styles.pageContainer}>
