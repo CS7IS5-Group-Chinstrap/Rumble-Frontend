@@ -217,7 +217,7 @@ const RegisterScreen = ({ navigation }) => {
           onCancel={() => setOpen(false)}
         /> */}
         <TouchableOpacity
-          onPress={registerUser}
+          onPress={() => registerUser(email, name, password)}
           style={{
             backgroundColor: "#AD40AF",
             padding: 20,

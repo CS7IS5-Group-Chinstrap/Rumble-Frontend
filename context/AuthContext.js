@@ -16,25 +16,12 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const data = { "email": email, "name" : name, "password": password };
-      const response = await axios.post(`${BASE_URL}/register`, data, {
-        transformRequest: [(data) => {
-          // Remove any circular references from the data object
-          const seen = new WeakSet();
-          return JSON.stringify(data, (key, value) => {
-            if (typeof value === "object" && value !== null) {
-              if (seen.has(value)) {
-                return;
-              }
-              seen.add(value);
-            }
-            return value;
-          });
-        }],
-      });
-      console.log(response.data);
+      const response = await axios.post(`${BASE_URL}/register`, data);
+      console.log(`response: ${response.data}`);
       setUserInfo(response.data.user);
       setUserID(response.data.user_id);
       setUserToken(response.data.token);
+      console.log(`token: ${response.data.token}`);
       AsyncStorage.setItem("userToken", response.data.token);
       AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user));
       AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
@@ -95,7 +82,7 @@ export const AuthProvider = ({ children }) => {
       if (userInfo) {
         setUserToken(userToken);
         setUserInfo(userInfo);
-        setUserInfo(userID);
+        setUserID(userID);
       }
       setIsLoading(false);
     } catch (error) {

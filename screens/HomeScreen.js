@@ -16,55 +16,45 @@ const HomeScreen = () => {
   const { userInfo, userID } = useContext(AuthContext);
   const [users, setUsers] = useState(userData);
   const [currentUser, setCurrentUser] = useState(null);
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
   const [me, setMe] = useState(null);
-
+  console.log(`User ID: ${userID}`);
   const onSwipeLeft = user => {
+    setCurrentUser(user.id);
     url = `${BASE_URL}/add-swipe`
     axios
       .post(
         url,
         {
           "user_id": userID,
-          "swiped_user_id": currentUser,
+          "swiped_user_id": user.id,
           "swipe_type": "left"
         }
       )
       .then(function (response) {
         console.log(response.data.match);
-        console.log(`index: ${currentUserIndex}`);
-        console.log(`user: ${currentUser}`);
-        setCurrentUserIndex(index => Math.min(index + 1, users.length - 1));
-        setCurrentUser(user[currentUserIndex].id);
       })
       .catch(function (error) { console.log(error)})
-    
+    console.log(`user: ${currentUser}`);
     console.log('Swipe Left', user.id);
     console.log('Swipe Left', user.firstname);
   };
   const onSwipeRight = async user => {
-    console.log(user[currentUserIndex])
+    setCurrentUser(user.id);
     url = `${BASE_URL}/add-swipe`
     axios
       .post(
         url,
         {
           "user_id": userID,
-          "swiped_user_id": currentUser,
+          "swiped_user_id": user.id,
           "swipe_type": "right"
         }
       )
       .then(function (response) {
         console.log(response.data.match);
-        console.log(`index: ${currentUserIndex}`);
-        console.log(`user: ${currentUser}`);
-        setCurrentUserIndex(index => Math.min(index + 1, users.length - 1));
-        
-        setCurrentUser(user[currentUserIndex].id);
       })
       .catch(function (error) { console.log(error)})
-      
-
+    console.log(`next user: ${currentUser}`);
     console.log("Swipe Right: ", user.id);
     console.log("Swipe Right: ", user.firstname);
   };
@@ -75,7 +65,6 @@ const HomeScreen = () => {
         console.log("Fetching Similar Users")
         const response = await axios.get(`${BASE_URL}/get-similar-users/${userID}`);
         setUsers(response.data);
-        setCurrentUserIndex(0);
         setCurrentUser(response.data[0].id);
       } catch (error) {
         console.error(error);
