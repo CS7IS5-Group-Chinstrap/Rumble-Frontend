@@ -1,12 +1,13 @@
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MatchesScreen from "./../screens/MatchesScreen";
 import ChatScreen from "./../screens/ChatScreen";
+import UserMatchScreen from "./../screens/UserMatchScreen";
 
 const Stack = createNativeStackNavigator();
 
-const MatchStack = () => {
+const MatchStack = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -20,6 +21,13 @@ const MatchStack = () => {
         options={({ route }) => ({
           title: route.params.user.name,
           headerBackTitleVisible: false,
+        })}
+      />
+      <Stack.Screen
+        name="UserMatchScreen"
+        component={UserMatchScreen}
+        options={({ route }) => ({
+          title: route.params.name,
         })}
       />
     </Stack.Navigator>

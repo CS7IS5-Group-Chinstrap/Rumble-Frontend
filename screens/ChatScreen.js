@@ -7,7 +7,14 @@ import React, {
 } from "react";
 import { GiftedChat, Composer, Bubble, Send } from "react-native-gifted-chat";
 // import Suggestions from "./../components/Suggestions";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { db } from "../firebase";
 import {
   collection,
@@ -17,7 +24,7 @@ import {
   setDoc,
   serverTimestamp,
   getDocs,
-  query
+  query,
 } from "firebase/firestore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -36,78 +43,108 @@ export default function ChatScreen({ navigation, route }) {
     { id: 4, name: "Lmao" },
     { id: 5, name: "What you upto?" },
   ];
-  const renderAccessory = (gf, m) => (
+  const renderAccessory = () => (
     <ScrollView
       style={styles.container}
       horizontal={true}
       contentContainerStyle={{ alignItems: "center" }}
+      showsHorizontalScrollIndicator={false}
     >
       {convStarter.map((item, index) => (
-        <View style={styles.suggestion} onPress={setIb(item.name)}>
-          <Text>{item.name}</Text>
-        </View>
+        <TouchableOpacity
+          key={item.id}
+          style={styles.suggestion}
+          onPress={() =>
+            setMessages((previousMessages) =>
+              GiftedChat.append(previousMessages, {
+                _id: route.params.user?.id + item.id,
+                text: item.name,
+                createdAt: new Date(),
+                user: {
+                  _id: route.params.user?.id,
+                  // _id: 1,
+                  name: route.params.user?.name,
+                },
+              })
+            )
+          }
+        >
+          <Text style={{ color: "white" }}>{item.name}</Text>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );
-  console.log(ib);
+  console.log(messages);
   useLayoutEffect(() => {
     // const getMessages = async () => {
-      const docId =
-        route.params.user?.id > 1 //userInfo.user._id
-          ? route.params.user?.id + "-" + "1" + "-abc" //userInfo.user._id
-          : userInfo.user._id + "-" + route.params.user?.id;
-      console.log("Get " + docId);
-      const query=query(collection(db,'chats',docId),orderBy('timestamp'))
-      const unsubscribe=onSnapshot(q,snapshot=>{
-        let m=[]
-        snapshot.forEach(doc=>{m.push({...doc.data(),id:doc.id})})
-        setMessages(m)
-      })
-      return()=> unsubscribe()
-      // const unsubscribe = onSnapshot(
-      //   collection(db, "chats", docId),
-      //   (snapshot) => {
-      //     setMessages(
-      //       snapshot.docs.map((doc) => ({
-      //         _id: doc.data()._id,
-      //         createdAt: doc.data().createdAt.toDate(),
-      //         text: doc.data().text,
-      //         user: doc.data().user,
-      //       }))
-      //     );
-      //   }
-      // );
-      // const querySnapshot = await getDocs(collection(db, "chats", docId));
-      // querySnapshot.forEach((doc) => {
-      //   // setMessages({ ...messages, doc })
-      //   console.log(doc.id, " => ", doc.data());
-      // });
-      return unsubscribe;
+    // const docId =
+    //   route.params.user?.id > 1 //userInfo.user._id
+    //     ? route.params.user?.id + "-" + "1" + "-abc" //userInfo.user._id
+    //     : userInfo.user._id + "-" + route.params.user?.id;
+    // console.log("Get " + docId);
+    // const query=query(collection(db,'chats',docId),orderBy('timestamp'))
+    // const unsubscribe=onSnapshot(q,snapshot=>{
+    //   let m=[]
+    //   snapshot.forEach(doc=>{m.push({...doc.data(),id:doc.id})})
+    //   setMessages(m)
+    // })
+    // return()=> unsubscribe()
+    // const unsubscribe = onSnapshot(
+    //   collection(db, "chats", docId),
+    //   (snapshot) => {
+    //     setMessages(
+    //       snapshot.docs.map((doc) => ({
+    //         _id: doc.data()._id,
+    //         createdAt: doc.data().createdAt.toDate(),
+    //         text: doc.data().text,
+    //         user: doc.data().user,
+    //       }))
+    //     );
+    //   }
+    // );
+    // const querySnapshot = await getDocs(collection(db, "chats", docId));
+    // querySnapshot.forEach((doc) => {
+    //   // setMessages({ ...messages, doc })
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+    // return unsubscribe;
     // };
     // getMessages();
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("UserMatchScreen", route.params.user)
+          }
+          style={{ backgroundColor: "#DE3163", borderRadius: 5 }}
+        >
+          <Text style={{ color: "white", padding: 5 }}>Profile</Text>
+        </TouchableOpacity>
+      ),
+    });
   }, []);
 
   const onSend = useCallback(async (messages = []) => {
-    const msg = messages[0];
-    const myMsg = {
-      ...msg,
-      sentBy: msg.user._id,
-      sentTo: route.params.user?.id,
-      createdAt: msg.createdAt,
-    };
+    // const msg = messages[0];
+    // const myMsg = {
+    //   ...msg,
+    //   sentBy: msg.user._id,
+    //   sentTo: route.params.user?.id,
+    //   createdAt: msg.createdAt,
+    // };
     setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, myMsg)
+      GiftedChat.append(previousMessages, messages)
     );
-    const docId =
-      route.params.user?.id > msg.user._id
-        ? route.params.user?.id + "-" + "1" + "-abc" //msg.user._id
-        : msg.user._id + "-" + route.params.user?.id;
-    console.log("Set " + docId);
-    const { _id, createdAt, text, user } = messages[0];
-    await setDoc(doc(db, "chats", docId), {
-      ...myMsg,
-      createdAt: serverTimestamp(),
-    });
+    // const docId =
+    //   route.params.user?.id > msg.user._id
+    //     ? route.params.user?.id + "-" + "1" + "-abc" //msg.user._id
+    //     : msg.user._id + "-" + route.params.user?.id;
+    // console.log("Set " + docId);
+    // const { _id, createdAt, text, user } = messages[0];
+    // await setDoc(doc(db, "chats", docId), {
+    //   ...myMsg,
+    //   createdAt: serverTimestamp(),
+    // });
     // await addDoc(collection(db, "chats"), {
     //   _id,
     //   createdAt,
@@ -153,11 +190,11 @@ export default function ChatScreen({ navigation, route }) {
       messages={messages}
       onSend={(messages) => onSend(messages)}
       user={{
-        // _id: userInfo.id,
-        _id: 1,
+        _id: route.params.user?.id,
+        // _id: 1,
       }}
       infiniteScroll
-      renderAccessory={() => renderAccessory(GiftedChat, messages)}
+      renderAccessory={() => renderAccessory()}
       renderQuickReplySend={renderAccessory}
       renderComposer={(props) => <Composer {...props} placeholder="Aa" />}
       renderBubble={renderBubble}
@@ -180,7 +217,7 @@ const styles = StyleSheet.create({
   },
   suggestion: {
     padding: 10,
-    backgroundColor: "lightgreen",
+    backgroundColor: "#DE3163",
     borderRadius: 15,
     height: 35,
     color: "white",
