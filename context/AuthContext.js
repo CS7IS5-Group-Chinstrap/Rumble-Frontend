@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }) => {
       setUserID(response.data.user_id);
       setUserToken(response.data.token);
       AsyncStorage.setItem("userToken", response.data.token);
-      AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
-      // AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
+      AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user));
+      AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -65,14 +65,15 @@ export const AuthProvider = ({ children }) => {
       setUserID(response.data.user_id);
       setUserToken(response.data.token);
       AsyncStorage.setItem("userToken", response.data.token);
-      AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
-      // AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
+      AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user));
+      AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
       setIsLoading(false);
     })
     .catch((error) => {
       console.log(error);
       setIsLoading(false);
     });
+    console.log(`ID: ${userID}`);
   };
   const logout = () => {
     console.log('Logging out...');
@@ -89,10 +90,12 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       let userToken = await AsyncStorage.getItem("userToken");
       let userInfo = await AsyncStorage.getItem("userInfo");
+      let userID = await AsyncStorage.getItem("userID");
       userInfo = JSON.parse(userInfo);
       if (userInfo) {
         setUserToken(userToken);
         setUserInfo(userInfo);
+        setUserInfo(userID);
       }
       setIsLoading(false);
     } catch (error) {
@@ -104,7 +107,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn();
   }, []);
   return (
-    <AuthContext.Provider value={{ registerUser, login, logout, userToken, userInfo }}>
+    <AuthContext.Provider value={{ registerUser, login, logout, userToken, userInfo, userID }}>
       {children}
     </AuthContext.Provider>
   );
