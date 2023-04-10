@@ -5,6 +5,7 @@ import axios from "axios";
 import Card from "../components/Card";
 import AnimatedStack from "../components/AnimatedStack";
 import userData from "../assets/data/users";
+import { BASE_URL } from "./../config";
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 400;
@@ -25,7 +26,7 @@ const HomeScreen = () => {
     const fetchSimilarUsers = async () => {
       try {
         console.log("Fetching Similar Users")
-        const response = await axios.get("http://127.0.0.1:5000/get-similar-users/1");
+        const response = await axios.get(`${BASE_URL}/get-similar-users/1`);
         setUsers(response.data);
         console.log(response.data);
       } catch (error) {
