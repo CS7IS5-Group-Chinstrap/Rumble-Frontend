@@ -143,23 +143,6 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{ color: "#AD40AF", fontWeight: "700" }}> Register</Text>
         </TouchableOpacity>
       </View>
-      {/* <Input
-        placeholder="Enter email"
-        label="Email"
-        leftIcon={{ type: "material", name: "email" }}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <Input
-        placeholder="Enter password"
-        label="Password"
-        leftIcon={{ type: "material", name: "lock" }}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry
-      />
-      <Button title="sign in" style={styles.button} onPress={signInUser} />
-      <Button title="register" style={styles.button} /> */}
     </SafeAreaView>
   );
 };

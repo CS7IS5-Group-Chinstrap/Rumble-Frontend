@@ -14,7 +14,7 @@ const OnboardingScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={styles.title}>Rumble</Text>
+        <Text style={styles.title}>Wingman</Text>
       </View>
       <Image source={require("../assets/logo.jpeg")} style={{width:300,height:300}}/>
       <TouchableOpacity

@@ -31,10 +31,10 @@ const ProfileScreen = () => {
   const userData =
     userInfo === null
       ? {
-          name: "Name",
-          bio: "Bio",
+          firstname: "Name",
+          essay0: "Bio",
           age: "",
-          gender: "",
+          sex: "",
           diet: "",
           drinks: "",
           location: "Location",
@@ -135,8 +135,8 @@ const ProfileScreen = () => {
     const ages = getAge(dob);
     // updated user details
     const updatedUserDetails = {
-      name: name === "" ? userData.name : name,
-      bio: bio === "" ? userData.bio : bio,
+      name: name === "" ? userData.firstname : name,
+      bio: bio === "" ? userData.essay0 : bio,
       age: ages === "" ? age : ages,
       location: location === "" ? userData.location : location,
       orientation: orientation === "" ? userData.orientation : orientation,
@@ -169,7 +169,7 @@ const ProfileScreen = () => {
         <Text>Name: </Text>
         <TextInput
           style={styles.input}
-          placeholder={userData.name}
+          placeholder={userData.firstname}
           value={name}
           onChangeText={(text) => setName(text)}
         />
@@ -177,7 +177,7 @@ const ProfileScreen = () => {
         <Text>Bio: </Text>
         <TextInput
           style={styles.input}
-          placeholder={userData.bio}
+          placeholder={userData.essay0}
           multiline
           numberOfLines={3}
           value={bio}
@@ -186,7 +186,7 @@ const ProfileScreen = () => {
         {/* Gender */}
         <Text>Gender: </Text>
         <Picker
-          selectedValue={userData.gender}
+          selectedValue={userData.sex}
           onValueChange={(itemValue) => setGender(itemValue)}
         >
           <Picker.Item label="Select" value="" />
@@ -197,7 +197,7 @@ const ProfileScreen = () => {
         {/* Orientation */}
         <Text>Orientation: </Text>
         <Picker
-          selectedValue={orientation}
+          selectedValue={userData.orientation}
           onValueChange={(itemValue) => setOrientation(itemValue)}
         >
           <Picker.Item label="Select" value="" />

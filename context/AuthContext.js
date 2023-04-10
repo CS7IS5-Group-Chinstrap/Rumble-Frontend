@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = (email, password) => {
+  const login = async (email, password) => {
     setIsLoading(true);
     console.log("Starting Login");
     const data = "";
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       },
       data : data
     };
-    axios.request(config)
+    await axios.request(config)
     .then((response) => {
       setUserInfo(response.data.user);
       setUserID(response.data.user_id);

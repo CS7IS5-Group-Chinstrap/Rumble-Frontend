@@ -36,6 +36,10 @@ export default function ChatScreen({ navigation, route }) {
   const { userInfo } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [ib, setIb] = useState("");
+  const docId =
+    route.params.user?.id > userInfo.user_id
+      ? route.params.user?.id + "-" + userInfo.user_id
+      : userInfo.user_id + "-" + route.params.user?.id;
   const convStarter = [
     { id: 1, name: "Hello" },
     { id: 2, name: "how are you doing?" },
@@ -76,40 +80,6 @@ export default function ChatScreen({ navigation, route }) {
   );
   console.log(messages);
   useLayoutEffect(() => {
-    // const getMessages = async () => {
-    // const docId =
-    //   route.params.user?.id > 1 //userInfo.user._id
-    //     ? route.params.user?.id + "-" + "1" + "-abc" //userInfo.user._id
-    //     : userInfo.user._id + "-" + route.params.user?.id;
-    // console.log("Get " + docId);
-    // const query=query(collection(db,'chats',docId),orderBy('timestamp'))
-    // const unsubscribe=onSnapshot(q,snapshot=>{
-    //   let m=[]
-    //   snapshot.forEach(doc=>{m.push({...doc.data(),id:doc.id})})
-    //   setMessages(m)
-    // })
-    // return()=> unsubscribe()
-    // const unsubscribe = onSnapshot(
-    //   collection(db, "chats", docId),
-    //   (snapshot) => {
-    //     setMessages(
-    //       snapshot.docs.map((doc) => ({
-    //         _id: doc.data()._id,
-    //         createdAt: doc.data().createdAt.toDate(),
-    //         text: doc.data().text,
-    //         user: doc.data().user,
-    //       }))
-    //     );
-    //   }
-    // );
-    // const querySnapshot = await getDocs(collection(db, "chats", docId));
-    // querySnapshot.forEach((doc) => {
-    //   // setMessages({ ...messages, doc })
-    //   console.log(doc.id, " => ", doc.data());
-    // });
-    // return unsubscribe;
-    // };
-    // getMessages();
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
@@ -125,33 +95,9 @@ export default function ChatScreen({ navigation, route }) {
   }, []);
 
   const onSend = useCallback(async (messages = []) => {
-    // const msg = messages[0];
-    // const myMsg = {
-    //   ...msg,
-    //   sentBy: msg.user._id,
-    //   sentTo: route.params.user?.id,
-    //   createdAt: msg.createdAt,
-    // };
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
-    // const docId =
-    //   route.params.user?.id > msg.user._id
-    //     ? route.params.user?.id + "-" + "1" + "-abc" //msg.user._id
-    //     : msg.user._id + "-" + route.params.user?.id;
-    // console.log("Set " + docId);
-    // const { _id, createdAt, text, user } = messages[0];
-    // await setDoc(doc(db, "chats", docId), {
-    //   ...myMsg,
-    //   createdAt: serverTimestamp(),
-    // });
-    // await addDoc(collection(db, "chats"), {
-    //   _id,
-    //   createdAt,
-    //   text,
-    //   user,
-    //   sendTo: route.params.user?.id,
-    // });
   }, []);
 
   const renderBubble = (props) => {

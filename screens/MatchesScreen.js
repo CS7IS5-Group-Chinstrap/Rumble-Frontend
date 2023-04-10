@@ -10,56 +10,55 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { BASE_URL } from "./../config";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import users from "../assets/data/users";
 // import Ionicons from "@expo/vector-icons/Ionicons";
+import axios from "axios";
+import { AuthContext } from "./../context/AuthContext";
+import ItemDivider from "./../components/ItemDivider";
 
-const MatchesScreen = ({navigation}) => {
+const MatchesScreen = ({ navigation }) => {
+  const { userInfo } = useContext(AuthContext);
   const [selectedId, setSelectedId] = useState();
-  const handleClick=async (user)=>{ 
-    url = `${BASE_URL}/matches/1`
-    await axios
-      .get(url)
-      .then(function (response) {
-        console.log(response) 
-      })
-      .catch(function (error) {
-        console.log(error) 
-      })
-      .then(function () {
-        console.log('matches finish') 
-      })
-    setSelectedId(user.name)
-    navigation.navigate("Chat",{user})
-  }
+  const [userMatches, setUserMatches] = useState([]);
+  const handleClick = async (user) => {
+    setSelectedId(user.name);
+    navigation.navigate("Chat", { user });
+  };
   // console.log(selectedId);
+  useEffect(() => {
+    const getMatches = async () => {
+      console.log("fetching matched users");
+      // console.log(userInfo.id);
+      url = `${BASE_URL}/matches/${userInfo.id}`;
+      // console.log(url);
+      await axios
+        .get(url)
+        .then((res) => setUserMatches(res.data))
+        .catch((err) => console.log(err));
+      console.log("done fetching");
+    };
+    getMatches();
+  }, []);
   return (
     <SafeAreaView style={styles.root}>
-      {/* <View style={styles.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 24, color: "#F63A6E" }}>
-          New Matches
-        </Text>
-        <View style={styles.users}>
-          {users.map((user) => (
-            <View style={styles.user} key={user.id}>
-              <Image source={{ uri: user.image }} style={styles.image} />
-            </View>
-          ))}
-        </View>
-      </View> */}
+      <Text style={{ fontSize: 32, fontWeight: "bold" }}>
+        {userInfo.firstname}'s Matches
+      </Text>
       <FlatList
-        data={users}
+        data={userMatches}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
               onPress={() => handleClick(item)}
               style={styles.item}
             >
-              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.title}>{item.firstname}</Text>
             </TouchableOpacity>
           );
         }}
         keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={ItemDivider}
       />
     </SafeAreaView>
   );
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   title: {
-    fontSize: 32,
+    fontSize: 22,
     color: "black",
   },
   root: {

@@ -19,7 +19,7 @@ const MatchStack = ({ navigation }) => {
         name="Chat"
         component={ChatScreen}
         options={({ route }) => ({
-          title: route.params.user.name,
+          title: route.params.user.firstname,
           headerBackTitleVisible: false,
         })}
       />

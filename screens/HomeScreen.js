@@ -14,7 +14,7 @@ const SWIPE_VELOCITY = 400;
 
 const HomeScreen = () => {
   const { userInfo, userID } = useContext(AuthContext);
-  const [users, setUsers] = useState(userData);
+  const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [me, setMe] = useState(null);
   console.log(`User ID: ${userID}`);
