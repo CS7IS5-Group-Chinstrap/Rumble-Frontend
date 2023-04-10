@@ -16,7 +16,6 @@ import users from "../assets/data/users";
 import { AuthContext } from "./../context/AuthContext";
 import axios from 'axios';
 import { BASE_URL } from "./../config";
-const user_id = 19
 
 const ProfileScreen = () => {
   const { logout, userInfo } = useContext(AuthContext);
@@ -48,18 +47,19 @@ const ProfileScreen = () => {
     }
     const payload = {
       "name" : name,
-      "essay0" : bio,
+      "bio" : bio,
       "sex" : gender,
       "orientation" :lookingFor,
     };
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/update-user?userID=${user_id}`,
+      const response = await axios.put(
+        `${BASE_URL}/update-user?userID=${userInfo}`,
         payload
       );
-  
+      console.warn(`User ID: ${userInfo}`);
       if (response.status === 200) {
+        console.warn(`User ${userInfo} saved successfully`);
         Alert.alert('User saved successfully');
       } else {
         console.warn('Error saving user data');
@@ -92,9 +92,9 @@ const ProfileScreen = () => {
           onValueChange={(itemValue) => setGender(itemValue)}
         >
           <Picker.Item label="Select" value="" />
-          <Picker.Item label="Male" value="MALE" />
-          <Picker.Item label="Female" value="FEMALE" />
-          <Picker.Item label="Other" value="OTHER" />
+          <Picker.Item label="Male" value="m" />
+          <Picker.Item label="Female" value="f" />
+          <Picker.Item label="Other" value="o" />
         </Picker>
         <Text>Looking For: </Text>
         <Picker
@@ -102,9 +102,9 @@ const ProfileScreen = () => {
           onValueChange={(itemValue) => setLookingFor(itemValue)}
         >
           <Picker.Item label="Select" value="" />
-          <Picker.Item label="Male" value="MALE" />
-          <Picker.Item label="Female" value="FEMALE" />
-          <Picker.Item label="Other" value="OTHER" />
+          <Picker.Item label="Straight" value="straight" />
+          <Picker.Item label="Gay" value="gay" />
+          <Picker.Item label="Bisexual" value="bisexual" />
         </Picker>
         <Pressable onPress={saveProfile} style={styles.button}>
           <Text>Save</Text>

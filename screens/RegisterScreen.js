@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 // import { Input, Button } from "@rneui/themed";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { AuthContext } from './../context/AuthContext';
 // import {Image} from "expo-image"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,6 +23,7 @@ import axios from 'axios';
 
 // import DatePicker from "react-native-date-picker";
 const RegisterScreen = ({ navigation }) => {
+  const {registerUser}= useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -45,30 +47,6 @@ const RegisterScreen = ({ navigation }) => {
         setSignedIn(false);
       })
       .catch((err) => console.log(err));
-  };
-
-  const registerUser = async (email, name, password) => {
-    try {
-      const data = { "email": email, "name" : name, "password": password };
-      const response = await axios.post(`${BASE_URL}/register`, data, {
-        transformRequest: [(data) => {
-          // Remove any circular references from the data object
-          const seen = new WeakSet();
-          return JSON.stringify(data, (key, value) => {
-            if (typeof value === "object" && value !== null) {
-              if (seen.has(value)) {
-                return;
-              }
-              seen.add(value);
-            }
-            return value;
-          });
-        }],
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
   };
   
 

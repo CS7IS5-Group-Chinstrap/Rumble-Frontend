@@ -28,7 +28,7 @@ const HomeScreen = () => {
         console.log("Fetching Similar Users")
         const response = await axios.get(`${BASE_URL}/get-similar-users/1`);
         setUsers(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         console.error(error);
       }

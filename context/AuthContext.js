@@ -11,6 +11,30 @@ export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
+  const registerUser = async (email, name, password) => {
+    try {
+      const data = { "email": email, "name" : name, "password": password };
+      const response = await axios.post(`${BASE_URL}/register`, data, {
+        transformRequest: [(data) => {
+          // Remove any circular references from the data object
+          const seen = new WeakSet();
+          return JSON.stringify(data, (key, value) => {
+            if (typeof value === "object" && value !== null) {
+              if (seen.has(value)) {
+                return;
+              }
+              seen.add(value);
+            }
+            return value;
+          });
+        }],
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const login = (email, password) => {
     setIsLoading(true);
     console.log("Starting Login");
@@ -25,21 +49,18 @@ export const AuthProvider = ({ children }) => {
       },
       data : data
     };
-    console.log(config);
     axios.request(config)
     .then((response) => {
-      setUserInfo(response.data);
+      setUserInfo(response.data.user_id);
       setUserToken(response.data.token);
       AsyncStorage.setItem("userToken", response.data.token);
-      AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
+      AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user_id));
       setIsLoading(false);
     })
     .catch((error) => {
       console.log(error);
       setIsLoading(false);
     });
-    console.log(`info: ${JSON.stringify(userInfo)}`);
-    console.log(`token: ${userToken}`);
   };
   const logout = () => {
     console.log('Logging out...');
@@ -70,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn();
   }, []);
   return (
-    <AuthContext.Provider value={{ login, logout, userToken, userInfo }}>
+    <AuthContext.Provider value={{ registerUser, login, logout, userToken, userInfo }}>
       {children}
     </AuthContext.Provider>
   );
