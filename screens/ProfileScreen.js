@@ -27,7 +27,7 @@ import Geocoder from "react-native-geocoding";
 const ProfileScreen = () => {
   Geocoder.init("AIzaSyD8zGBxeJtEukuEdGfPB3ucmES3N7N0EP8");
 
-  const { logout, userInfo } = useContext(AuthContext);
+  const { userID, userInfo } = useContext(AuthContext);
   const userData =
     userInfo === null
       ? {
@@ -147,12 +147,12 @@ const ProfileScreen = () => {
     console.log(updatedUserDetails);
     try {
       const response = await axios.put(
-        `${BASE_URL}/update-user?userID=${userInfo.user_id}`,
+        `${BASE_URL}/update-user?userID=${userID}`,
         updatedUserDetails
       );
-      console.log(`User ID: ${userInfo.user_id}`);
+      console.log(`User ID: ${userID}`);
       if (response.status === 200) {
-        console.log(`User ${userInfo.user_id} saved successfully`);
+        console.log(`User ${userID} saved successfully`);
         Alert.alert('User saved successfully');
       } else {
         console.warn('Error saving user data');
