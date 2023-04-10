@@ -139,7 +139,7 @@ const ProfileScreen = () => {
       age: ages === "" ? age : ages,
       location: location === "" ? userData.location : location,
       orientation: orientation === "" ? userData.orientation : orientation,
-      gender: gender === "" ? userData.gender : gender,
+      gender: gender === userData.sex ? userData.sex : gender,
       diet: diet === "" ? userData.diet : diet,
       drinks: drinks === "" ? userData.drinks : drinks,
     };
@@ -190,7 +190,7 @@ const ProfileScreen = () => {
         {/* Gender */}
         <Text>Gender: </Text>
         <Picker
-          selectedValue={userData.sex}
+          selectedValue={gender}
           onValueChange={(itemValue) => setGender(itemValue)}
         >
           <Picker.Item label="Select" value="" />
@@ -201,7 +201,7 @@ const ProfileScreen = () => {
         {/* Orientation */}
         <Text>Orientation: </Text>
         <Picker
-          selectedValue={userData.orientation}
+          selectedValue={orientation}
           onValueChange={(itemValue) => setOrientation(itemValue)}
         >
           <Picker.Item label="Select" value="" />
@@ -212,7 +212,7 @@ const ProfileScreen = () => {
         {/* Diet */}
         <Text>Diet:</Text>
         <Picker
-          selectedValue={userData.diet}
+          selectedValue={diet}
           onValueChange={(itemValue) => setDiet(itemValue)}
         >
           <Picker.Item label="Select" value="" />
@@ -240,7 +240,7 @@ const ProfileScreen = () => {
         {/* Drinks */}
         <Text>Drinks:</Text>
         <Picker
-          selectedValue={userData.drinks}
+          selectedValue={drinks}
           onValueChange={(itemValue) => setDrinks(itemValue)}
         >
           <Picker.Item label="Select" value="" />
