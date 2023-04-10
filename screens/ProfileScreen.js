@@ -144,15 +144,15 @@ const ProfileScreen = () => {
       diet: diet === "" ? userData.diet : diet,
       drinks: drinks === "" ? userData.drinks : drinks,
     };
-    console.log(updatedUserDetails);
+    console.log(updatedUserDetails.name);
     try {
       const response = await axios.put(
         `${BASE_URL}/update-user?userID=${userInfo}`,
         updatedUserDetails
       );
-      console.warn(`User ID: ${userInfo}`);
+      console.log(`User ID: ${userInfo}`);
       if (response.status === 200) {
-        console.warn(`User ${userInfo} saved successfully`);
+        console.log(`User ${userInfo} saved successfully`);
         Alert.alert('User saved successfully');
       } else {
         console.warn('Error saving user data');
@@ -296,7 +296,7 @@ const ProfileScreen = () => {
           editable={false}
         />
         {/* Save Button */}
-        <Pressable onPress={save} style={styles.button}>
+        <Pressable onPress={saveProfile} style={styles.button}>
           <Text>Save</Text>
         </Pressable>
         {/* Logout Button */}

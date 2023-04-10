@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }) => {
     };
     axios.request(config)
     .then((response) => {
-      setUserInfo(response.data.user_id);
+      setUserInfo(response.data);
       setUserToken(response.data.token);
       AsyncStorage.setItem("userToken", response.data.token);
-      AsyncStorage.setItem("userInfo", JSON.stringify(response.data.user_id));
+      AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
       setIsLoading(false);
     })
     .catch((error) => {
