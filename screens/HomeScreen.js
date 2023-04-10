@@ -7,6 +7,8 @@ import AnimatedStack from "../components/AnimatedStack";
 import userData from "../assets/data/users";
 import { BASE_URL } from "./../config";
 
+
+
 const ROTATION = 60;
 const SWIPE_VELOCITY = 400;
 
@@ -16,9 +18,39 @@ const HomeScreen = () => {
   const [me, setMe] = useState(null);
 
   const onSwipeLeft = user => {
+    url = "http://52.49.73.0/add-swipe"
+    axios
+      .post(
+        url,
+        {
+          "user_id": 22,
+          "swiped_user_id": 1,
+          "swipe_type": "left"
+        }
+      )
+      .then(function (response) { console.log(response.data.match)})
+      .catch(function (error) { console.log(error)})
+    
+    console.log('Swipe Left', user.id);
     console.log('Swipe Left', user.name);
   };
-  const onSwipeRight = user => {
+
+  const onSwipeRight = async user => {
+    url = "http://52.49.73.0/add-swipe"
+    axios
+      .post(
+        url,
+        {
+          "user_id": 22,
+          "swiped_user_id": 1,
+          "swipe_type": "right"
+        }
+      )
+      .then(function (response) { console.log(response.data.match)})
+      .catch(function (error) { console.log(error)})
+      
+
+    console.log("Swipe Right: ", user.id);
     console.log("Swipe Right: ", user.name);
   };
 
@@ -36,7 +68,6 @@ const HomeScreen = () => {
   
     fetchSimilarUsers();
   }, []);
-
   return (
     <View style={styles.pageContainer}>
       <AnimatedStack
