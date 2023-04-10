@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import axios from "axios";
 
@@ -6,13 +6,14 @@ import Card from "../components/Card";
 import AnimatedStack from "../components/AnimatedStack";
 import userData from "../assets/data/users";
 import { BASE_URL } from "./../config";
-
+import { AuthContext } from "./../context/AuthContext";
 
 
 const ROTATION = 60;
 const SWIPE_VELOCITY = 400;
 
 const HomeScreen = () => {
+  const { logout, userInfo } = useContext(AuthContext);
   const [users, setUsers] = useState(userData);
   const [currentUser, setCurrentUser] = useState(null);
   const [me, setMe] = useState(null);
@@ -23,7 +24,7 @@ const HomeScreen = () => {
       .post(
         url,
         {
-          "user_id": 22,
+          "user_id": userInfo.user_id,
           "swiped_user_id": 1,
           "swipe_type": "left"
         }
@@ -32,16 +33,15 @@ const HomeScreen = () => {
       .catch(function (error) { console.log(error)})
     
     console.log('Swipe Left', user.id);
-    console.log('Swipe Left', user.name);
+    console.log('Swipe Left', user.firstname);
   };
-
   const onSwipeRight = async user => {
     url = "http://52.49.73.0/add-swipe"
     axios
       .post(
         url,
         {
-          "user_id": 22,
+          "user_id": userInfo.user_id,
           "swiped_user_id": 1,
           "swipe_type": "right"
         }
@@ -51,14 +51,14 @@ const HomeScreen = () => {
       
 
     console.log("Swipe Right: ", user.id);
-    console.log("Swipe Right: ", user.name);
+    console.log("Swipe Right: ", user.firstname);
   };
 
   useEffect(() => {
     const fetchSimilarUsers = async () => {
       try {
         console.log("Fetching Similar Users")
-        const response = await axios.get(`${BASE_URL}/get-similar-users/98`);
+        const response = await axios.get(`${BASE_URL}/get-similar-users/${userInfo.user_id}`);
         setUsers(response.data);
         // console.log(response.data);
       } catch (error) {

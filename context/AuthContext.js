@@ -10,8 +10,10 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [userID, setUserID] = useState(null);
 
   const registerUser = async (email, name, password) => {
+    setIsLoading(true);
     try {
       const data = { "email": email, "name" : name, "password": password };
       const response = await axios.post(`${BASE_URL}/register`, data, {
@@ -30,8 +32,16 @@ export const AuthProvider = ({ children }) => {
         }],
       });
       console.log(response.data);
+      setUserInfo(response.data.user);
+      setUserID(response.data.user_id);
+      setUserToken(response.data.token);
+      AsyncStorage.setItem("userToken", response.data.token);
+      AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
+      // AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -43,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://52.49.73.0/login',
+      url: `${BASE_URL}/login`,
       headers: { 
         'Authorization': 'Basic '+ encode(email + ':' + password)
       },
@@ -51,10 +61,12 @@ export const AuthProvider = ({ children }) => {
     };
     axios.request(config)
     .then((response) => {
-      setUserInfo(response.data);
+      setUserInfo(response.data.user);
+      setUserID(response.data.user_id);
       setUserToken(response.data.token);
       AsyncStorage.setItem("userToken", response.data.token);
       AsyncStorage.setItem("userInfo", JSON.stringify(response.data));
+      // AsyncStorage.setItem("userID", JSON.stringify(response.data.user_id));
       setIsLoading(false);
     })
     .catch((error) => {
@@ -68,6 +80,7 @@ export const AuthProvider = ({ children }) => {
     setUserToken(null);
     AsyncStorage.removeItem("userToken");
     AsyncStorage.removeItem("userInfo");
+    AsyncStorage.removeItem("userID");
     setIsLoading(false);
     console.log('Logged out...');
   };
