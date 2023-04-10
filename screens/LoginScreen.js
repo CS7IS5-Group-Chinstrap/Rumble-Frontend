@@ -109,7 +109,7 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => {login(email,password)}}
           style={{
-            backgroundColor: "#AD40AF",
+            backgroundColor: "#DE3163",
             padding: 20,
             borderRadius: 10,
             marginBottom: 30,
@@ -140,7 +140,7 @@ const LoginScreen = ({ navigation }) => {
             navigation.navigate("Register");
           }}
         >
-          <Text style={{ color: "#AD40AF", fontWeight: "700" }}> Register</Text>
+          <Text style={{ color: "#DE3163", fontWeight: "700" }}> Register</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

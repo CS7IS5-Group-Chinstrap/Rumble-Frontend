@@ -219,7 +219,7 @@ const RegisterScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => registerUser(email, name, password)}
           style={{
-            backgroundColor: "#AD40AF",
+            backgroundColor: "#DE3163",
             padding: 20,
             borderRadius: 10,
             marginBottom: 30,
@@ -250,7 +250,7 @@ const RegisterScreen = ({ navigation }) => {
             navigation.goBack();
           }}
         >
-          <Text style={{ color: "#AD40AF", fontWeight: "700" }}> Login</Text>
+          <Text style={{ color: "#DE3163", fontWeight: "700" }}> Login</Text>
         </TouchableOpacity>
       </View>
       {/* <Input
