@@ -1,9 +1,9 @@
 import React from "react";
-import { Text, ImageBackground, View, StyleSheet, Image } from "react-native";
+import { Text, ImageBackground, View, StyleSheet, Image, ScrollView } from "react-native";
 import Animated from "react-native-reanimated";
 
 const Card = (props) => {
-  const { firstname, image, essay0, sex } = props.user;
+  const { firstname, image, age, essay0, sex } = props.user;
   const AnimatedImageBackground =
     Animated.createAnimatedComponent(ImageBackground);
 
@@ -17,26 +17,22 @@ const Card = (props) => {
 
   return (
     <View style={styles.card}>
-      <ImageBackground
-        source={{
-          uri: image ? image : getPlaceholderImage(),
-        }}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        {image ? (
-          <View style={styles.cardInner} collapsable={false}>
-            <Text style={styles.name}>{firstname}</Text>
-            <Text style={styles.bio}>{essay0}</Text>
-          </View>
-        ) : (
-          <View style={styles.cardInner}>
-            <Image source={getPlaceholderImage()} style={styles.placeholderImage} />
-            <Text style={styles.name}>{firstname}</Text>
-            <Text style={styles.bio}>{essay0}</Text>
-          </View>
-        )}
-      </ImageBackground>
+      <View style={styles.imageContainer}>
+        <ImageBackground
+          source={{
+            uri: image ? image : getPlaceholderImage(),
+          }}
+          resizeMode="cover"
+          style={styles.image}
+        >
+        </ImageBackground>
+      </View>
+      <View style={styles.bioContainer}>
+        <Text style={styles.name}>{firstname}, {age}</Text>
+        <ScrollView>
+        <Text style={styles.bio}>{essay0}</Text>
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -44,7 +40,7 @@ const Card = (props) => {
 const styles = StyleSheet.create({
   card: {
     width: "90%",
-    height: "80%",
+    height: 500,
     borderRadius: 10,
     backgroundColor: "#fefefe",
     shadowColor: "#000",
@@ -56,33 +52,29 @@ const styles = StyleSheet.create({
     shadowRadius: 6.68,
     elevation: 11,
   },
+  imageContainer: {
+    height: "70%",
+    overflow: "hidden",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
   image: {
-    // ...StyleSheet.absoluteFillObject,
     width: "100%",
     height: "100%",
-    borderRadius: 10,
-    overflow: "hidden",
-    justifyContent: "flex-end",
   },
-  cardInner: {
-    padding: 10,
-    marginTop: 20,
+  bioContainer: {
+    height: "30%",
+    paddingHorizontal: 10,
+    paddingVertical: 15,
   },
   name: {
-    fontSize: 30,
-    color: "white",
+    fontSize: 25,
     fontWeight: "bold",
-  },
-  maleName: {
     marginBottom: 10,
   },
-  femaleName: {
-    marginBottom: 5,
-  },
   bio: {
-    fontSize: 18,
-    color: "white",
-    lineHeight: 25,
+    fontSize: 15,
+    lineHeight: 20,
   },
 });
 
