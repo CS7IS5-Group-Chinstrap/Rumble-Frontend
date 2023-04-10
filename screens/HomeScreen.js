@@ -18,10 +18,10 @@ const HomeScreen = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [me, setMe] = useState(null);
   console.log(`User ID: ${userID}`);
-  const onSwipeLeft = user => {
+  const onSwipeLeft = async user => {
     setCurrentUser(user.id);
     url = `${BASE_URL}/add-swipe`
-    axios
+    await axios
       .post(
         url,
         {
@@ -41,7 +41,7 @@ const HomeScreen = () => {
   const onSwipeRight = async user => {
     setCurrentUser(user.id);
     url = `${BASE_URL}/add-swipe`
-    axios
+    await axios
       .post(
         url,
         {

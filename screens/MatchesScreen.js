@@ -9,13 +9,26 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { BASE_URL } from "./../config";
 import React, { useState } from "react";
 import users from "../assets/data/users";
 // import Ionicons from "@expo/vector-icons/Ionicons";
 
 const MatchesScreen = ({navigation}) => {
   const [selectedId, setSelectedId] = useState();
-  const handleClick=(user)=>{
+  const handleClick=async (user)=>{ 
+    url = `${BASE_URL}/matches/1`
+    await axios
+      .get(url)
+      .then(function (response) {
+        console.log(response) 
+      })
+      .catch(function (error) {
+        console.log(error) 
+      })
+      .then(function () {
+        console.log('matches finish') 
+      })
     setSelectedId(user.name)
     navigation.navigate("Chat",{user})
   }
