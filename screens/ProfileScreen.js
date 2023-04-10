@@ -139,7 +139,7 @@ const ProfileScreen = () => {
       age: ages === "" ? age : ages,
       location: location === "" ? userData.location : location,
       orientation: orientation === "" ? userData.orientation : orientation,
-      gender: gender === userData.sex ? userData.sex : gender,
+      sex: gender === userData.sex ? userData.sex : gender,
       diet: diet === "" ? userData.diet : diet,
       drinks: drinks === "" ? userData.drinks : drinks,
     };
