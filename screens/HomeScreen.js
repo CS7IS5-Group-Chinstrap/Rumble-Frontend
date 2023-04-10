@@ -5,6 +5,7 @@ import axios from "axios";
 import Card from "../components/Card";
 import AnimatedStack from "../components/AnimatedStack";
 import userData from "../assets/data/users";
+import { BASE_URL } from "./../config";
 
 
 
@@ -53,6 +54,20 @@ const HomeScreen = () => {
     console.log("Swipe Right: ", user.name);
   };
 
+  useEffect(() => {
+    const fetchSimilarUsers = async () => {
+      try {
+        console.log("Fetching Similar Users")
+        const response = await axios.get(`${BASE_URL}/get-similar-users/1`);
+        setUsers(response.data);
+        // console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchSimilarUsers();
+  }, []);
   return (
     <View style={styles.pageContainer}>
       <AnimatedStack

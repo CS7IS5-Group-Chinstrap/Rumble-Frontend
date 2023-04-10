@@ -8,20 +8,26 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 // import { Input, Button } from "@rneui/themed";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { AuthContext } from './../context/AuthContext';
 // import {Image} from "expo-image"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import InputField from "./../components/InputField";
+import { BASE_URL } from "./../config";
+import axios from 'axios';
 // import DateTimePicker from "@react-native-community/datetimepicker";
 
 // import DatePicker from "react-native-date-picker";
 const RegisterScreen = ({ navigation }) => {
+  const {registerUser}= useContext(AuthContext);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -42,6 +48,23 @@ const RegisterScreen = ({ navigation }) => {
       })
       .catch((err) => console.log(err));
   };
+  
+
+  // const registerUser = async (email, name, password) => {
+  //   try {
+  //     console.log("Starting Registration")
+  //     const response = await axios.post(`${BASE_URL}/register`, {
+  //       email: email,
+  //       name: name,
+  //       password: password,
+  //     });
+  //     console.log(response.data); // do something with the response data
+  //     console.log("Completed Registration")
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   console.log(show)
   return (
     <SafeAreaView style={styles.container}>
@@ -88,6 +111,8 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Email"
             style={{ flex: 1, paddingVertical: 0 }}
             keyboardType="email-address"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
           />
         </View>
         <View
@@ -108,6 +133,8 @@ const RegisterScreen = ({ navigation }) => {
           <TextInput
             placeholder="Full Name"
             style={{ flex: 1, paddingVertical: 0 }}
+            value={name}
+            onChangeText={(text) => setName(text)}
           />
         </View>
         <View
@@ -129,6 +156,8 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Password"
             style={{ flex: 1, paddingVertical: 0 }}
             secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
           />
         </View>
         <View
@@ -150,6 +179,8 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Confirm Password"
             style={{ flex: 1, paddingVertical: 0 }}
             secureTextEntry={true}
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
           />
         </View>
         {/* Date Of Birth */}
@@ -186,7 +217,7 @@ const RegisterScreen = ({ navigation }) => {
           onCancel={() => setOpen(false)}
         /> */}
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={registerUser}
           style={{
             backgroundColor: "#AD40AF",
             padding: 20,

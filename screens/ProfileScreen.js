@@ -18,6 +18,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
 import users from "../assets/data/users";
 import { AuthContext } from "./../context/AuthContext";
+import { BASE_URL } from "./../config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Location from "expo-location";
 import axios from "axios";
@@ -79,7 +80,6 @@ const ProfileScreen = () => {
   const toggleDatePicker = () => {
     setOpen(!open);
   };
-
   // For setting the date for date of birth
   const onChange = ({ type }, selectedDate) => {
     if (type == "set") {
@@ -126,8 +126,7 @@ const ProfileScreen = () => {
     return message;
     // return name && bio && gender && lookingFor;
   };
-  // saving the data
-  const save = async () => {
+  const saveProfile = async () => {
     const m = isValid();
     if (m !== "") {
       console.log(m);
@@ -146,9 +145,23 @@ const ProfileScreen = () => {
       drinks: drinks === "" ? userData.drinks : drinks,
     };
     console.log(updatedUserDetails);
-    // DO AXIOS CALL HERE AND PASS updatedUserDetails
-    Alert.alert("User Saved Successfully");
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/update-user?userID=${userInfo}`,
+        updatedUserDetails
+      );
+      console.warn(`User ID: ${userInfo}`);
+      if (response.status === 200) {
+        console.warn(`User ${userInfo} saved successfully`);
+        Alert.alert('User saved successfully');
+      } else {
+        console.warn('Error saving user data');
+      }
+    } catch (error) {
+      console.error(error);
+    };
   };
+
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
