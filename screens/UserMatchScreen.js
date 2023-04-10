@@ -68,7 +68,7 @@ const UserMatchScreen = ({ navigation, route }) => {
         </View>
         <View
           style={{
-            flexDirection: "row",
+            // flexDirection: "row",
             marginLeft: 5,
             marginTop: 10,
             paddingHorizontal: 10,

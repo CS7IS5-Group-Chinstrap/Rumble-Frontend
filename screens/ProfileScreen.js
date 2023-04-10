@@ -27,7 +27,7 @@ import Geocoder from "react-native-geocoding";
 const ProfileScreen = () => {
   Geocoder.init("AIzaSyD8zGBxeJtEukuEdGfPB3ucmES3N7N0EP8");
 
-  const { userID, userInfo } = useContext(AuthContext);
+  const { userID, userInfo, logout } = useContext(AuthContext);
   const userData =
     userInfo === null
       ? {
@@ -164,10 +164,10 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View
-          style={{ flex: 1, alignItems: "center" }}
-        >
-          <Text style={{fontSize:22, fontWeight:'bold'}}>{userData.firstname}'s Details</Text>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+            {userData.firstname}'s Details
+          </Text>
         </View>
         {/* Name */}
         <Text>Name: </Text>
