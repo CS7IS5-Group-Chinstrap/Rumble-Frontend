@@ -27,8 +27,10 @@ import {
   query,
 } from "firebase/firestore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import axios from "axios";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AuthContext } from "./../context/AuthContext";
+import { BASE_URL } from "./../config";
 
 export default function ChatScreen({ navigation, route }) {
   console.log(route.params.user?.name);
@@ -47,6 +49,28 @@ export default function ChatScreen({ navigation, route }) {
     { id: 4, name: "Lmao" },
     { id: 5, name: "What you upto?" },
   ];
+  const [icebreaker, setIcebreaker] = useState([convStarter]);
+  useEffect(() => {
+    const getIceBreaker = async () => {
+      console.log(`Route ID: ${route.params.user?.id}`);
+      try {
+        console.log("Fetching Similar Users")
+        const response = await axios.get(`${BASE_URL}/get-ice-breakers/${route.params.user?.id}`);
+        const outputArray = response.data
+        ? response.data.map((text, index) => ({
+            id: index + 1,
+            name: text
+          }))
+        : [];
+        console.log(`response: ${JSON.stringify(outputArray)}`);
+        setIcebreaker(outputArray);
+        console.log(`Route Name: ${route.params.user?.firstname}`);
+      } catch{
+        (function (error) { console.log(error)})
+      };
+    }
+    getIceBreaker();
+  }, []);
   const renderAccessory = () => (
     <ScrollView
       style={styles.container}
@@ -54,7 +78,7 @@ export default function ChatScreen({ navigation, route }) {
       contentContainerStyle={{ alignItems: "center" }}
       showsHorizontalScrollIndicator={false}
     >
-      {convStarter.map((item, index) => (
+      {icebreaker.map((item, index) => (
         <TouchableOpacity
           key={item.id}
           style={styles.suggestion}
@@ -73,12 +97,14 @@ export default function ChatScreen({ navigation, route }) {
             )
           }
         >
-          <Text style={{ color: "white" }}>{item.name}</Text>
+          <Text style={{ color: "white" }}>{item.name || ""}</Text>
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
-  console.log(messages);
+  console.log(`param ${JSON.stringify(route.params.user.firstname)}`);
+  console.log(`Icebreakers: ${JSON.stringify(convStarter)}`);
+  console.log(`messages ${messages}`);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
