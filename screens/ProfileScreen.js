@@ -72,7 +72,6 @@ const ProfileScreen = () => {
       const region = reverseGeocodedAddress[0].region;
       const loc = city + ", " + region;
       setLocation(loc);
-
     };
     getPermissions();
   }, []);
@@ -153,18 +152,23 @@ const ProfileScreen = () => {
       console.log(`User ID: ${userID}`);
       if (response.status === 200) {
         console.log(`User ${userID} saved successfully`);
-        Alert.alert('User saved successfully');
+        Alert.alert("User saved successfully");
       } else {
-        console.warn('Error saving user data');
+        console.warn("Error saving user data");
       }
     } catch (error) {
       console.error(error);
-    };
+    }
   };
 
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View
+          style={{ flex: 1, alignItems: "center" }}
+        >
+          <Text style={{fontSize:22, fontWeight:'bold'}}>{userData.firstname}'s Details</Text>
+        </View>
         {/* Name */}
         <Text>Name: </Text>
         <TextInput
