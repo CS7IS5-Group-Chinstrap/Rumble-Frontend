@@ -19,7 +19,7 @@ import AppStack from "./Navigation/AppStack";
 import { AuthProvider } from "./context/AuthContext";
 import AppNav from './Navigation/AppNav';
 
-LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
 
 const Stack = createNativeStackNavigator();
 

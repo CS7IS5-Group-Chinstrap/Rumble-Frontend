@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   animatedCard: {
     // ...StyleSheet.absoluteFillObject,
     width: "90%",
-    height: "70%",
+    height: "80%",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     position: "absolute",
-    top: 80,
+    top: '15%',
     zIndex: 1,
     // elevation: 1,
   },

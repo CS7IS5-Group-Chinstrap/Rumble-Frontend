@@ -14,6 +14,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  LogBox,
 } from "react-native";
 import { db } from "../firebase";
 import {
@@ -31,46 +32,103 @@ import axios from "axios";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AuthContext } from "./../context/AuthContext";
 import { BASE_URL } from "./../config";
+import uuid from "react-native-uuid";
+const IGNORED_LOGS = [
+  'Non-serializable values were found in the navigation state',
+];
 
+LogBox.ignoreLogs(IGNORED_LOGS);
 export default function ChatScreen({ navigation, route }) {
   console.log(route.params.user?.name);
   console.log(route.params.user?.id);
   const { userInfo } = useContext(AuthContext);
-  const [messages, setMessages] = useState([]);
-  const [ib, setIb] = useState("");
-  const docId =
-    route.params.user?.id > userInfo.user_id
-      ? route.params.user?.id + "-" + userInfo.user_id
-      : userInfo.user_id + "-" + route.params.user?.id;
-  const convStarter = [
-    { id: 1, name: "Hello" },
-    { id: 2, name: "how are you doing?" },
-    { id: 3, name: "what's up?" },
-    { id: 4, name: "Lmao" },
-    { id: 5, name: "What you upto?" },
+  const dummyMessage = [
+    {
+      _id: "System",
+      text: "Start Chatting right away!!",
+      user: {
+        _id: "System",
+      },
+      createdAt: new Date(),
+    },
   ];
-  const [icebreaker, setIcebreaker] = useState([convStarter]);
+  const [messages, setMessages] = useState(dummyMessage);
+  const [suggestion, setSuggestion] = useState("");
+
+  const docId =
+    route.params.user?.id > userInfo.id
+      ? route.params.user?.id + "-" + userInfo.id
+      : userInfo.id +
+        "-" +
+        userInfo.firstname +
+        "-" +
+        route.params.user?.id +
+        "-" +
+        route.params.user?.firstname;
+  console.log(docId);
+  const chatsRef = doc(db, "chats", docId);
+  const [icebreaker, setIcebreaker] = useState([]);
+  // Fetching icebreakers
   useEffect(() => {
     const getIceBreaker = async () => {
       console.log(`Route ID: ${route.params.user?.id}`);
       try {
-        console.log("Fetching Similar Users")
-        const response = await axios.get(`${BASE_URL}/get-ice-breakers/${route.params.user?.id}`);
+        console.log("Fetching Similar Users");
+        const response = await axios.get(
+          `${BASE_URL}/get-ice-breakers/${route.params.user?.id}`
+        );
         const outputArray = response.data
-        ? response.data.map((text, index) => ({
-            id: index + 1,
-            name: text
-          }))
-        : [];
+          ? response.data.map((text, index) => ({
+              id: index + 1,
+              name: text,
+            }))
+          : [];
         console.log(`response: ${JSON.stringify(outputArray)}`);
         setIcebreaker(outputArray);
         console.log(`Route Name: ${route.params.user?.firstname}`);
-      } catch{
-        (function (error) { console.log(error)})
-      };
-    }
+      } catch {
+        (function (error) {
+          console.log(error);
+        });
+      }
+    };
     getIceBreaker();
   }, []);
+  // fetching messages from firebase
+  useEffect(() => {
+    onSnapshot(chatsRef, async (snapshot) => {
+      await setMessages(
+        snapshot.data().messages.map((message) => ({
+          ...message,
+          createdAt: message.createdAt.toDate(),
+        }))
+      );
+    });
+  }, [docId]);
+
+  useEffect(() => {
+    const suggestionMessage = {
+      _id: uuid.v4(),
+      text: suggestion,
+      createdAt: new Date(),
+      user: {
+        _id: userInfo.id,
+        name: route.params.user?.name,
+      },
+    };
+    const sendSuggestion = async () => {
+      console.log(suggestionMessage);
+      await setDoc(
+        chatsRef,
+        {
+          messages: GiftedChat.append(messages, suggestionMessage),
+        },
+        { merge: true }
+      );
+    };
+    sendSuggestion();
+  }, [suggestion]);
+  
   const renderAccessory = () => (
     <ScrollView
       style={styles.container}
@@ -82,19 +140,40 @@ export default function ChatScreen({ navigation, route }) {
         <TouchableOpacity
           key={item.id}
           style={styles.suggestion}
-          onPress={() =>
-            setMessages((previousMessages) =>
-              GiftedChat.append(previousMessages, {
-                _id: route.params.user?.id + item.id,
-                text: item.name,
-                createdAt: new Date(),
-                user: {
-                  _id: route.params.user?.id,
-                  // _id: 1,
-                  name: route.params.user?.name,
-                },
-              })
-            )
+          onPress={
+            () => setSuggestion(item.name)
+            //   {
+            //   setMessages((previousMessages) =>
+            //     GiftedChat.append(previousMessages, {
+            //       _id: uuid.v4(),
+            //       text: item.name,
+            //       createdAt: new Date(),
+            //       user: {
+            //         // _id: route.params.user?.id,
+            //         _id: userInfo.id,
+            //         // _id: 1,
+            //         name: route.params.user?.name,
+            //       },
+            //     })
+            //   );
+            //   await setDoc(
+            //     chatsRef,
+            //     {
+            //       messages: GiftedChat.append(messages, {
+            //         _id: uuid.v4(),
+            //         text: item.name,
+            //         createdAt: new Date(),
+            //         user: {
+            //           // _id: route.params.user?.id,
+            //           _id: userInfo.id,
+            //           // _id: 1,
+            //           name: route.params.user?.name,
+            //         },
+            //       }),
+            //     },
+            //     { merge: true }
+            //   );
+            // }
           }
         >
           <Text style={{ color: "white" }}>{item.name || ""}</Text>
@@ -103,8 +182,7 @@ export default function ChatScreen({ navigation, route }) {
     </ScrollView>
   );
   console.log(`param ${JSON.stringify(route.params.user.firstname)}`);
-  console.log(`Icebreakers: ${JSON.stringify(convStarter)}`);
-  console.log(`messages ${messages}`);
+  console.log(`messages ${JSON.stringify(messages)}`);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -114,17 +192,37 @@ export default function ChatScreen({ navigation, route }) {
           }
           style={{ backgroundColor: "#DE3163", borderRadius: 5 }}
         >
-          <Text style={{ color: "white", padding: 5 }}>Profile</Text>
+          <Text style={{ color: "white", padding: 10 }}>Profile</Text>
         </TouchableOpacity>
       ),
     });
   }, []);
 
-  const onSend = useCallback(async (messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-  }, []);
+  // const onSend = useCallback(async (messages = []) => {
+  //   setMessages((previousMessages) =>
+  //     GiftedChat.append(previousMessages, messages)
+  //   );
+  // }, []);
+
+  const onSend = useCallback(
+    async (m = []) => {
+      // setMessages((previousMessages) =>
+      //   GiftedChat.append(previousMessages, messages)
+      // );
+      console.log(`Lol: ${JSON.stringify(m)}`);
+
+      console.log(`Haha: ${JSON.stringify(messages)}`);
+      await setDoc(
+        chatsRef,
+        {
+          messages: GiftedChat.append(messages, m),
+        },
+        { merge: true }
+      );
+      console.log(JSON.stringify(messages));
+    },
+    [docId, messages]
+  );
 
   const renderBubble = (props) => {
     return (
@@ -162,7 +260,8 @@ export default function ChatScreen({ navigation, route }) {
       messages={messages}
       onSend={(messages) => onSend(messages)}
       user={{
-        _id: route.params.user?.id,
+        // _id: route.params.user?.id,
+        _id: userInfo.id,
         // _id: 1,
       }}
       infiniteScroll
