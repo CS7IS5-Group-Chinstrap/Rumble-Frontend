@@ -13,8 +13,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 const OnboardingScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={{justifyContent:"center", alignItems:"center"}}>
         <Text style={styles.title}>Wingman</Text>
+        <Text style={styles.subtitle}>Single Tonight? Not Tomorrow!</Text>
       </View>
       <Image source={require("../assets/logo.jpeg")} style={{width:300,height:300}}/>
       <TouchableOpacity
@@ -36,6 +37,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#fff",
+  },
+  subtitle: {
+    fontSize: 18,
+    color: "#20315f",
   },
   title: {
     fontSize: 30,

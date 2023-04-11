@@ -44,12 +44,12 @@ const ProfileScreen = () => {
   const [user, setUser] = useState(userData);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [gender, setGender] = useState("");
-  const [diet, setDiet] = useState("");
-  const [drinks, setDrinks] = useState("");
+  const [gender, setGender] = useState(userInfo.sex);
+  const [diet, setDiet] = useState(userInfo.diet);
+  const [drinks, setDrinks] = useState(userInfo.drinks);
   const [currentLocation, setCurrentLocation] = useState();
   const [location, setLocation] = useState();
-  const [orientation, setOrientation] = useState("");
+  const [orientation, setOrientation] = useState(userInfo.orientation);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [dob, setDob] = useState("");
@@ -301,7 +301,7 @@ const ProfileScreen = () => {
         />
         {/* Save Button */}
         <Pressable onPress={saveProfile} style={styles.button}>
-          <Text>Save</Text>
+          <Text style={{color:'#fff'}}>Save</Text>
         </Pressable>
         {/* Logout Button */}
         <Pressable
@@ -310,7 +310,7 @@ const ProfileScreen = () => {
           }}
           style={styles.button}
         >
-          <Text>Sign Out</Text>
+          <Text style={{color:'#fff'}}>Sign Out</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   button: {
-    backgroundColor: "#f63a6e",
+    backgroundColor: "#DE3163",
     height: 25,
     justifyContent: "center",
     alignItems: "center",

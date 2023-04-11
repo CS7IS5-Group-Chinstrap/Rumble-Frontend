@@ -17,7 +17,6 @@ const HomeScreen = () => {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [me, setMe] = useState(null);
-  console.log(`User ID: ${userID}`);
   const onSwipeLeft = async user => {
     setCurrentUser(user.id);
     url = `${BASE_URL}/add-swipe`
@@ -25,7 +24,7 @@ const HomeScreen = () => {
       .post(
         url,
         {
-          "user_id": userID,
+          "user_id": userInfo.id,
           "swiped_user_id": user.id,
           "swipe_type": "left"
         }
@@ -45,7 +44,7 @@ const HomeScreen = () => {
       .post(
         url,
         {
-          "user_id": userID,
+          "user_id": userInfo.id,
           "swiped_user_id": user.id,
           "swipe_type": "right"
         }
@@ -63,7 +62,7 @@ const HomeScreen = () => {
     const fetchSimilarUsers = async () => {
       try {
         console.log("Fetching Similar Users")
-        const response = await axios.get(`${BASE_URL}/get-similar-users/${userID}`);
+        const response = await axios.get(`${BASE_URL}/get-similar-users/${userInfo.id}`);
         setUsers(response.data);
         setCurrentUser(response.data[0].id);
       } catch (error) {
