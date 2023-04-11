@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  LogBox,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Logo from "./assets/final_logo.png";
@@ -17,6 +18,8 @@ import AuthStack from "./Navigation/AuthStack";
 import AppStack from "./Navigation/AppStack";
 import { AuthProvider } from "./context/AuthContext";
 import AppNav from './Navigation/AppNav';
+
+LogBox.ignoreLogs(["Warning: ..."]);
 
 const Stack = createNativeStackNavigator();
 
